@@ -11,16 +11,57 @@
     ],
   },
   "files": [
-    { "kind": "folder", "path": "PDFMarkup", "target-membership": [ "PDFMarkup" ] },
+    {
+      "kind": "folder",
+      "path": "PDFMarkup",
+      "target-membership": [
+        "PDFMarkup",
+      ],
+      "membership-exceptions": [
+        {
+          "target": "PDFMarkup",
+          "exclusions": [
+            "Info.plist",
+          ],
+        },
+      ],
+    },
     { "kind": "folder", "path": "PDFMarkupTests", "target-membership": [ "PDFMarkupTests" ] },
     { "kind": "folder", "path": "PDFMarkupUITests", "target-membership": [ "PDFMarkupUITests" ] },
     {
+      "kind": "folder",
+      "path": "CubPreview",
+      "target-membership": [
+        "CubPreview",
+      ],
+      "membership-exceptions": [
+        {
+          "target": "PDFMarkup",
+          "inclusions": [
+            "CubMapView.swift",
+            "CubParser.swift",
+          ],
+        }, {
+          "target": "CubPreview",
+          "exclusions": [
+            "Info.plist",
+          ],
+        },
+      ],
+    }, {
+      "kind": "group",
+      "name": "Frameworks",
+      "children": [
+        { "path": "<SDK>/System/Library/Frameworks/Quartz.framework", "target-membership": [ "CubPreview/frameworks" ] },
+      ],
+    }, {
       "kind": "group",
       "name": "Products",
       "children": [
         { "path": "<PRODUCTS>/PDFMarkup.app", "id": "F9A2B1A830B6F0CD00AE0A7E", "type": "wrapper.application", "index": false },
         { "path": "<PRODUCTS>/PDFMarkupTests.xctest", "id": "F9A2B1B530B6F0D000AE0A7E", "type": "wrapper.cfbundle", "index": false },
         { "path": "<PRODUCTS>/PDFMarkupUITests.xctest", "id": "F9A2B1BF30B6F0D000AE0A7E", "type": "wrapper.cfbundle", "index": false },
+        { "path": "<PRODUCTS>/CubPreview.appex", "id": "F9A2B1D730B7272200AE0A7E", "type": "wrapper.app-extension", "index": false, "target-membership": [ { "build-phase": "PDFMarkup/copy/Embed Foundation Extensions", "header-preservation": "remove-on-copy" } ] },
       ],
     },
   ],
@@ -30,10 +71,18 @@
       "id": "F9A2B1A730B6F0CD00AE0A7E",
       "product": "Products/PDFMarkup.app",
       "product-type": "application",
+      "dependencies": [
+        "CubPreview",
+      ],
       "build-phases": [
         "compile-sources",
         "frameworks",
         "resources",
+        {
+          "kind": "copy",
+          "name": "Embed Foundation Extensions",
+          "bundle-base-path": "plugins-directory",
+        },
       ],
       "build-settings": {
         "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon",
@@ -47,6 +96,7 @@
         "ENABLE_PREVIEWS": "YES",
         "ENABLE_USER_SELECTED_FILES": "readwrite",
         "GENERATE_INFOPLIST_FILE": "YES",
+        "INFOPLIST_FILE": "PDFMarkup/Info.plist",
         "INFOPLIST_KEY_NSHumanReadableCopyright": "",
         "LD_RUNPATH_SEARCH_PATHS": [
           "$(inherited)",
@@ -123,6 +173,43 @@
         "SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY": "YES",
         "SWIFT_VERSION": "5.0",
         "TEST_TARGET_NAME": "PDFMarkup",
+      },
+    }, {
+      "name": "CubPreview",
+      "id": "F9A2B1D630B7272200AE0A7E",
+      "product": "Products/CubPreview.appex",
+      "product-type": "app-extension",
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+      "build-settings": {
+        "CODE_SIGN_STYLE": "Automatic",
+        "CURRENT_PROJECT_VERSION": "1",
+        "DEVELOPMENT_TEAM": "HPNUKV4JL2",
+        "ENABLE_APP_SANDBOX": "YES",
+        "ENABLE_HARDENED_RUNTIME": "YES",
+        "ENABLE_USER_SELECTED_FILES": "readonly",
+        "GENERATE_INFOPLIST_FILE": "YES",
+        "INFOPLIST_FILE": "CubPreview/Info.plist",
+        "INFOPLIST_KEY_CFBundleDisplayName": "CubPreview",
+        "INFOPLIST_KEY_NSHumanReadableCopyright": "",
+        "LD_RUNPATH_SEARCH_PATHS": [
+          "$(inherited)",
+          "@executable_path/../Frameworks",
+          "@executable_path/../../../../Frameworks",
+        ],
+        "MACOSX_DEPLOYMENT_TARGET": "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)",
+        "MARKETING_VERSION": "1.0",
+        "PRODUCT_BUNDLE_IDENTIFIER": "com.zakariabouayyad.PDFMarkup.CubPreview",
+        "PRODUCT_NAME": "$(TARGET_NAME)",
+        "SKIP_INSTALL": "YES",
+        "STRING_CATALOG_GENERATE_SYMBOLS": "YES",
+        "SWIFT_APPROACHABLE_CONCURRENCY": "YES",
+        "SWIFT_EMIT_LOC_STRINGS": "YES",
+        "SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY": "YES",
+        "SWIFT_VERSION": "5.0",
       },
     },
   ],
