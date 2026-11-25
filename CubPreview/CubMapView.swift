@@ -5,31 +5,33 @@ struct CubMapView: View {
 
     var body: some View {
         Canvas { context, size in
-            let cell = min(size.width / CGFloat(map.width), size.height / CGFloat(map.height))
-            let originX = (size.width - cell * CGFloat(map.width)) / 2
-            let originY = (size.height - cell * CGFloat(map.height)) / 2
+            // Whole-point cell size and origin, so tile edges never fall between pixels.
+            let cell = max(1, floor(min(size.width / CGFloat(map.width), size.height / CGFloat(map.height))))
+            let originX = floor((size.width - cell * CGFloat(map.width)) / 2)
+            let originY = floor((size.height - cell * CGFloat(map.height)) / 2)
 
+            // One path per tile type: 4 fills instead of one per tile, and no seams.
+            var walls = Path(), floors = Path(), doors = Path(), players = Path()
             for (y, row) in map.grid.enumerated() {
                 for (x, tile) in row.enumerated() {
                     let rect = CGRect(x: originX + CGFloat(x) * cell,
                                       y: originY + CGFloat(y) * cell,
                                       width: cell, height: cell)
                     switch tile {
-                    case .wall:
-                        context.fill(Path(rect), with: .color(.primary))
-                    case .floor:
-                        context.fill(Path(rect), with: .color(map.floor.color))
+                    case .wall: walls.addRect(rect)
+                    case .floor: floors.addRect(rect)
+                    case .door: doors.addRect(rect)
                     case .player:
-                        context.fill(Path(rect), with: .color(map.floor.color))
-                        context.fill(Path(ellipseIn: rect.insetBy(dx: cell / 4, dy: cell / 4)),
-                                     with: .color(.red))
-                    case .door:
-                        context.fill(Path(rect), with: .color(.orange))
-                    case .empty:
-                        break
+                        floors.addRect(rect)
+                        players.addEllipse(in: rect.insetBy(dx: cell / 4, dy: cell / 4))
+                    case .empty: break
                     }
                 }
             }
+            context.fill(walls, with: .color(.primary))
+            context.fill(floors, with: .color(map.floor.color))
+            context.fill(doors, with: .color(.orange))
+            context.fill(players, with: .color(.red))
         }
         .padding()
         .background(map.ceiling.color.opacity(0.15))

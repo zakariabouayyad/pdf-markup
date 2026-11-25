@@ -23,6 +23,11 @@
           "exclusions": [
             "Info.plist",
           ],
+        }, {
+          "target": "PDFMarkupTests",
+          "inclusions": [
+            "sample.pdf",
+          ],
         },
       ],
     },
